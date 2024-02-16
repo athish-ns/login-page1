@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+    <title>Reaper Captcha</title>
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const signUpForm = document.querySelector('.form-container.sign-up form');
+            const signInForm = document.querySelector('.form-container.sign-in form');
+
+            signUpForm.addEventListener('submit', function (event) {
+                event.preventDefault();
+                const name = signUpForm.querySelector('input[type="text"]').value;
+                const email = signUpForm.querySelector('input[type="email"]').value;
+                const password = signUpForm.querySelector('input[type="password"]').value;
+
+                if (name !== "" && email !== "" && password !== "") {
+                    // Check if the email is already registered
+                    const users = JSON.parse(localStorage.getItem('users')) || [];
+                    const isEmailRegistered = users.some(user => user.email === email);
+
+                    if (!isEmailRegistered) {
+                        // Save user credentials to localStorage
+                        const newUser = { name, email, password };
+                        users.push(newUser);
+                        localStorage.setItem('users', JSON.stringify(users));
+
+                        // Redirect to page2.html on successful signup
+                        window.location.href = "page2.html";
+                    } else {
+                        alert("Email is already registered. Please use a different email.");
+                    }
+                } else {
+                    alert("Please fill in all the fields.");
+                }
+            });
+
+            signInForm.addEventListener('submit', function (event) {
+                event.preventDefault();
+                const email = signInForm.querySelector('input[type="email"]').value;
+                const password = signInForm.querySelector('input[type="password"]').value;
+
+                if (email !== "" && password !== "") {
+                    // Check if the email and password match the stored credentials
+                    const users = JSON.parse(localStorage.getItem('users')) || [];
+                    const user = users.find(u => u.email === email && u.password === password);
+
+                    if (user) {
+                        // Redirect to page2.html on successful login
+                        window.location.href = "page2.html";
+                    } else {
+                        alert("Invalid email or password. Please try again.");
+                    }
+                } else {
+                    alert("Please enter your email and password.");
+                }
+            });
+
+
+            toggleRegister.addEventListener('click', function () {
+                container.classList.add('right-panel-active');
+            });
+
+            toggleLogin.addEventListener('click', function () {
+                container.classList.remove('right-panel-active');
+            });
+        });
+    </script>
+</head>
+
+<body>
+
+    <div class="container" id="container">
+        <div class="form-container sign-up">
+            <form>
+                <h1>Create Account</h1>
+                <div class="social-icons">
+                    <a href="#" class="icon"><i class="fa-brands fa-google-plus-g"></i></a>
+                    <a href="#" class="icon"><i class="fa-brands fa-facebook-f"></i></a>
+                    <a href="#" class="icon"><i class="fa-brands fa-github"></i></a>
+                    <a href="#" class="icon"><i class="fa-brands fa-linkedin-in"></i></a>
+                </div>
+                <span>or use your email for registration</span>
+                <input type="text" placeholder="Name">
+                <input type="email" placeholder="Email">
+                <input type="password" placeholder="Password">
+                <button type="submit">Sign Up</button>
+            </form>
+        </div>
+        <div class="form-container sign-in">
+            <form>
+                <h1>Sign In</h1>
+                <div class="social-icons">
+                    <a href="#" class="icon"><i class="fa-brands fa-google-plus-g"></i></a>
+                    <a href="#" class="icon"><i class="fa-brands fa-facebook-f"></i></a>
+                    <a href="#" class="icon"><i class="fa-brands fa-github"></i></a>
+                    <a href="#" class="icon"><i class="fa-brands fa-linkedin-in"></i></a>
+                </div>
+                <span>or use your email password</span>
+                <input type="email" placeholder="Email">
+                <input type="password" placeholder="Password">
+                <a href="#">Forget Your Password?</a>
+                <button type="submit">Sign In</button>
+            </form>
+        </div>
+        <div class="toggle-container">
+            <div class="toggle">
+                <div class="toggle-panel toggle-left">
+                    <h1>Welcome Back!</h1>
+                    <p>Enter your personal details to use all site features</p>
+                    <button class="hidden" id="login">Sign In</button>
+                </div>
+                <div class="toggle-panel toggle-right">
+                    <h1>Welcome, Friend!</h1>
+                    <p>Enter your personal details to use all site features</p>
+                    <button class="hidden" id="register">Sign Up</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+
+</html>
